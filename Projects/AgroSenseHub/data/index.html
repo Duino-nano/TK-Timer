@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico">
+    <title>AgroSenseHub設定</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            text-align: center;
+            background-color: #f7f7f7;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        div {
+            display: flex;
+            align-items: center;
+            margin: 5px;
+        }
+
+        input {
+            padding: 10px;
+            margin-top: 5px;
+            margin-right: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            max-width: 200px;
+            transition: background-color 0.3s;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background-color: #8fd892;
+        }
+
+        button#restartButton {
+            padding: 10px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            max-width: 200px;
+            transition: background-color 0.3s;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 10px; /* マージンを変更 */
+        }
+
+        button#restartButton:hover {
+            background-color: #ff3333;
+        }
+    </style>
+</head>
+<body>
+    <h1>AgroSenseHub設定</h1>
+
+    <form id="ssidupdateForm" onsubmit="event.preventDefault();">
+        <label for="ssid">WIFI SSID</label>
+        <div>
+            <input type="text" id="ssid" value="" placeholder="SSID">
+            <button onclick="updateData('ssid')">更新</button>
+        </div>
+    </form>
+
+    <form id="psupdateForm" onsubmit="event.preventDefault();">
+        <label for="ps">WIFI PS</label>
+        <div>
+            <input type="text" id="ps" value="" placeholder="PASSWORD">
+            <button onclick="updateData('ps')">更新</button>
+        </div>
+    </form>
+    
+    <form id="gasIdupdateForm" onsubmit="event.preventDefault();">
+        <label for="gasId">GAS DEVID</label>
+        <div>
+            <input type="text" id="gasId" value="" placeholder="GAS DEVID">
+            <button onclick="updateData('gasId')">更新</button>
+        </div>
+    </form>
+
+    <form id="gasIntervalFrom" onsubmit="event.preventDefault();">
+        <label for="gasInterval">GAS INTERVAL</label>
+        <div>
+            <input type="text" id="gasInterval" value="" placeholder="GAS INTERVAL">
+            <button onclick="updateData('gasInterval')">更新</button>
+        </div>
+    </form>
+
+    <button id="restartButton" onclick="restart()">再起動</button>
+    
+
+    <script>
+        // ページが読み込まれた時にESPからデータを取得して表示
+        fetch('/getData')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ssid').placeholder = data.ssid;
+                document.getElementById('ps').placeholder = data.ps;
+                document.getElementById('gasId').placeholder = data.gasId;
+                document.getElementById('gasInterval').placeholder = data.gasInterval;
+            });
+
+        function updateData(type) {
+            var newData = document.getElementById(type).value;
+            if (newData) {
+                fetch('/' + type + 'Update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'newData=' + encodeURIComponent(newData),
+                }).then(response => {
+                    document.getElementById(type).value ="";
+                    document.getElementById(type).placeholder = newData;
+                });
+            }
+        }
+
+        function restart(){
+            // ESPへの再起動リクエストを送信
+            fetch('/restart', {
+                method: 'POST'
+            }).then(response => {
+                // レスポンスの処理（必要に応じて）
+            }).catch(error => {
+                console.error('Error during restart request:', error);
+            });
+        }
+    </script>
+</body>
+</html>
+

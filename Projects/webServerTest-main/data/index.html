@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico">
+    <title>MeasureLinks設定</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            text-align: center;
+            background-color: #f7f7f7;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        div {
+            display: flex;
+            align-items: center;
+            margin: 5px;
+        }
+
+        input {
+            padding: 10px;
+            margin-top: 5px;
+            margin-right: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            max-width: 200px;
+            transition: background-color 0.3s;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background-color: #8fd892;
+        }
+    </style>
+</head>
+<body>
+    <h1>MeasureLinks設定</h1>
+
+    <form id="ssidupdateForm" onsubmit="event.preventDefault();">
+        <label for="ssid">WIFI SSID</label>
+        <div>
+            <input type="text" id="ssid" value="" placeholder="SSID">
+            <button onclick="updateData('ssid')">更新</button>
+        </div>
+    </form>
+
+    <form id="psupdateForm" onsubmit="event.preventDefault();">
+        <label for="ps">WIFI PS</label>
+        <div>
+            <input type="text" id="ps" value="" placeholder="PASSWORD">
+            <button onclick="updateData('ps')">更新</button>
+        </div>
+    </form>
+    
+    <form id="gasIdupdateForm" onsubmit="event.preventDefault();">
+        <label for="gasId">GAS DEVID</label>
+        <div>
+            <input type="text" id="gasId" value="" placeholder="GAS DEVID">
+            <button onclick="updateData('gasId')">更新</button>
+        </div>
+    </form>
+
+    <script>
+        // ページが読み込まれた時にESPからデータを取得して表示
+        fetch('/getData')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ssid').placeholder = data.ssid;
+                document.getElementById('ps').placeholder = data.ps;
+                document.getElementById('gasId').placeholder = data.gasId;
+            });
+
+        function updateData(type) {
+            var newData = document.getElementById(type).value;
+            if (newData) {
+                fetch('/' + type + 'Update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'newData=' + encodeURIComponent(newData),
+                }).then(response => {
+                    document.getElementById(type).value ="";
+                    document.getElementById(type).placeholder = newData;
+                });
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico">
+    <title>ESP32 WebServer</title>
+</head>
+<body>
+    <h1>ESP32 WebServer</h1>
+
+    <form id="ssidupdateForm" onsubmit="event.preventDefault();">
+        <label for="ssid">WIFI SSID</label>
+        <input type="text" id="ssid" value="" placeholder="Enter new data">
+        <button onclick="updateData('ssid')">Update</button>
+    </form>
+
+    <form id="psupdateForm" onsubmit="event.preventDefault();">
+        <label for="ps">WIFI PS</label>
+        <input type="text" id="ps" value="" placeholder="Enter new data">
+        <button onclick="updateData('ps')">Update</button>
+    </form>
+    
+    <form id="gasIdupdateForm" onsubmit="event.preventDefault();">
+        <label for="gasId">GAS DEVID</label>
+        <input type="text" id="gasId" value="" placeholder="Enter new data">
+        <button onclick="updateData('gasId')">Update</button>
+    </form>
+
+    <script>
+        // ページが読み込まれた時にESPからデータを取得して表示
+        fetch('/getData')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ssid').placeholder = data.ssid;
+                document.getElementById('ps').placeholder = data.ps;
+                document.getElementById('gasId').placeholder = data.gasId;
+            });
+
+        function updateData(type) {
+            var newData = document.getElementById(type).value;
+            if (newData) {
+                fetch('/' + type + 'Update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'newData=' + encodeURIComponent(newData),
+                }).then(response => {
+                    document.getElementById(type).value ="";
+                    document.getElementById(type).placeholder = newData;
+                });
+            }
+        }
+    </script>
+</body>
+</html> -->
