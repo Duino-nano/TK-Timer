@@ -56,8 +56,17 @@ void loop() {
     // フレームからチャンネルデータをデコード
     if(outTimer.isWait()){
       decodeSbusData();
-      sprintf(data, " %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d",
-              channels[0],channels[1],channels[2],channels[3],channels[4],channels[5],channels[6],channels[8],channels[9],channels[10],channels[11],channels[12],channels[13],channels[14],channels[15]);
+      // sprintf(data, " %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d: %4d",
+      //         channels[0],channels[1],channels[2],channels[3],channels[4],channels[5],channels[6],channels[7],channels[8],channels[9],channels[10],channels[11],channels[12],channels[13],channels[14],channels[15]);
+      //         // チャンネルの数だけループを回す
+      data[0] = '\0';
+      for (int i = 0; i < 16; i++) {
+        // 各チャンネルの値をdataに追加
+        sprintf(data + strlen(data), " %4d:", channels[i]);
+      }
+
+      // 最後のコロンを削除する場合（必要に応じて）
+      data[strlen(data) - 1] = '\0';
       Serial.println(data);
     }
   }
