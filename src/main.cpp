@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "BLESetup.hpp"
 
-
+// 
 void setup() {
   Serial.begin(115200);  // シリアル通信を115200ボーレートで初期化
   BLEStart();
