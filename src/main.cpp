@@ -38,7 +38,7 @@ const int segment[]     = {
 };
 int segDot[] = {0, 0, 0};  // ドット表示用の配列
 
-const int buttonPin[3] = {upButtonPin, resetButtonPin, startButtonPin};  // ボタンのピンを設定
+const int buttonPin[3] = {upButtonPin, resetButtonPin, startButtonPin};  // ボタンのピン
 
 // 表示する数字
 int dispNum = 0;
